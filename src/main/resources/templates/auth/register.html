@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/auth-layout :: authlayout(~{::title}, ~{::main})}">
+<head>
+  <title>Đăng ký tài khoản | Quản lý KTX</title>
+</head>
+<body>
+<main>
+  <h2 class="auth-title">Đăng ký tài khoản</h2>
+  <p class="auth-sub">Dành cho sinh viên. Tài khoản nhân viên do Ban quản lý cấp.</p>
+
+  <form th:action="@{/register}" th:object="${form}" method="post" novalidate>
+    <div class="grid-2">
+      <div class="field">
+        <label for="hoTen">Họ và tên <b>*</b></label>
+        <input type="text" id="hoTen" th:field="*{hoTen}" placeholder="Nguyễn Văn An" th:errorclass="is-invalid">
+        <div class="field-error" th:if="${#fields.hasErrors('hoTen')}" th:errors="*{hoTen}"></div>
+      </div>
+      <div class="field">
+        <label for="maSoSinhVien">Mã sinh viên <b>*</b></label>
+        <input type="text" id="maSoSinhVien" th:field="*{maSoSinhVien}" placeholder="2001240001" th:errorclass="is-invalid">
+        <div class="field-error" th:if="${#fields.hasErrors('maSoSinhVien')}" th:errors="*{maSoSinhVien}"></div>
+      </div>
+      <div class="field">
+        <label for="lop">Lớp</label>
+        <input type="text" id="lop" th:field="*{lop}" placeholder="15DHTH01" th:errorclass="is-invalid">
+        <div class="field-error" th:if="${#fields.hasErrors('lop')}" th:errors="*{lop}"></div>
+      </div>
+      <div class="field">
+        <label for="khoa">Khoa</label>
+        <input type="text" id="khoa" th:field="*{khoa}" placeholder="Công nghệ thông tin" th:errorclass="is-invalid">
+        <div class="field-error" th:if="${#fields.hasErrors('khoa')}" th:errors="*{khoa}"></div>
+      </div>
+      <div class="field">
+        <label for="email">Email <b>*</b></label>
+        <input type="email" id="email" th:field="*{email}" placeholder="ban@example.com" th:errorclass="is-invalid">
+        <div class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+      </div>
+      <div class="field">
+        <label for="soDienThoai">Số điện thoại</label>
+        <input type="text" id="soDienThoai" th:field="*{soDienThoai}" placeholder="0900000000" th:errorclass="is-invalid">
+        <div class="field-error" th:if="${#fields.hasErrors('soDienThoai')}" th:errors="*{soDienThoai}"></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="tenDangNhap">Tên đăng nhập <b>*</b></label>
+      <input type="text" id="tenDangNhap" th:field="*{tenDangNhap}" placeholder="VD: sv011" autocomplete="username" th:errorclass="is-invalid">
+      <div class="field-error" th:if="${#fields.hasErrors('tenDangNhap')}" th:errors="*{tenDangNhap}"></div>
+    </div>
+    <div class="grid-2">
+      <div class="field">
+        <label for="matKhau">Mật khẩu <b>*</b></label>
+        <input type="password" id="matKhau" th:field="*{matKhau}" placeholder="Ít nhất 6 ký tự" autocomplete="new-password" th:errorclass="is-invalid">
+        <div class="field-error" th:if="${#fields.hasErrors('matKhau')}" th:errors="*{matKhau}"></div>
+      </div>
+      <div class="field">
+        <label for="xacNhanMatKhau">Nhập lại mật khẩu <b>*</b></label>
+        <input type="password" id="xacNhanMatKhau" th:field="*{xacNhanMatKhau}" placeholder="Nhập lại mật khẩu" autocomplete="new-password" th:errorclass="is-invalid">
+        <div class="field-error" th:if="${#fields.hasErrors('xacNhanMatKhau')}" th:errors="*{xacNhanMatKhau}"></div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-primary-app btn-block">Đăng ký</button>
+  </form>
+
+  <p class="auth-switch">Đã có tài khoản? <a th:href="@{/login}">Đăng nhập</a></p>
+</main>
+</body>
+</html>

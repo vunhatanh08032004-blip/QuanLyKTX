@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+<head>
+  <title>Quản lý sinh viên | Quản lý KTX</title>
+</head>
+<body>
+<main>
+  <div class="page-title">
+    <svg class="ic ic-lg"><use href="#i-user"/></svg>
+    <h1>Quản lý sinh viên</h1>
+  </div>
+
+  <form class="card-box toolbar" method="get" th:action="@{/student}">
+    <input type="text" name="q" th:value="${q}" placeholder="Tìm theo họ tên, MSSV, lớp, khoa...">
+    <button type="submit" class="btn-primary-app">Tìm</button>
+  </form>
+
+  <div class="card-box table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr><th>MSSV</th><th>Họ và tên</th><th>Lớp</th><th>Khoa</th><th>Email</th><th>SĐT</th><th>Trạng thái</th><th class="col-actions" th:if="${currentUser.vaiTro == 'BAN_QUAN_LY_KTX'}">Thao tác</th></tr>
+      </thead>
+      <tbody>
+        <tr th:each="s : ${students}">
+          <td th:text="${s.maSoSinhVien}">2001240001</td>
+          <td><strong th:text="${s.hoTen}">Nguyễn Văn An</strong></td>
+          <td th:text="${s.lop} ?: '—'">15DHTH01</td>
+          <td th:text="${s.khoa} ?: '—'">CNTT</td>
+          <td th:text="${s.email} ?: '—'">an@example.com</td>
+          <td th:text="${s.soDienThoai} ?: '—'">0900000001</td>
+          <td>
+            <span class="badge-app badge-danger" th:if="${s.biKhoa}">Đã khóa</span>
+            <span class="badge-app badge-success" th:unless="${s.biKhoa}">Hoạt động</span>
+          </td>
+          <td class="col-actions" th:if="${currentUser.vaiTro == 'BAN_QUAN_LY_KTX'}">
+            <form th:action="@{/student/{id}/lock(id=${s.maSinhVien})}" method="post" class="inline-form"
+                  onsubmit="return confirm('Xác nhận thay đổi trạng thái tài khoản sinh viên này?');">
+              <input type="hidden" name="q" th:value="${q}">
+              <button type="submit" class="btn-outline-app" th:classappend="${!s.biKhoa} ? 'btn-outline-danger'"
+                      th:text="${s.biKhoa} ? 'Mở khóa' : 'Khóa'">Khóa</button>
+            </form>
+          </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(students)}"><td colspan="8" class="empty-row">Không có sinh viên nào phù hợp.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+</body>
+</html>

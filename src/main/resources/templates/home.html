@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+<head>
+  <title>Trang chủ | Quản lý KTX</title>
+</head>
+<body>
+<main>
+  <div class="page-title">
+    <svg class="ic ic-lg"><use href="#i-home"/></svg>
+    <h1>Trang chủ</h1>
+  </div>
+
+  <div class="card-box welcome">
+    <div>
+      <h2>Xin chào, <span th:text="${currentUser.hoTen}">Nguyễn Văn An</span>!</h2>
+      <p>Bạn đang đăng nhập với vai trò <strong th:text="${currentUser.vaiTroLabel}">Sinh viên</strong>.</p>
+      <p th:if="${roleIntro != null and !roleIntro.isEmpty()}" th:text="${roleIntro}">Mô tả vai trò.</p>
+    </div>
+  </div>
+
+  <!-- Số liệu nhanh: chỉ Ban quản lý / Nhân viên quản lý -->
+  <div class="stat-row" th:if="${staffCount != null or studentCount != null}">
+    <a class="stat-card" th:if="${staffCount != null}" th:href="@{/staff}">
+      <span class="stat-num" th:text="${staffCount}">0</span><span>Nhân viên</span>
+    </a>
+    <a class="stat-card" th:if="${studentCount != null}" th:href="@{/student}">
+      <span class="stat-num" th:text="${studentCount}">0</span><span>Sinh viên</span>
+    </a>
+  </div>
+
+  <!-- Lối tắt: tự sinh theo vai trò -->
+  <div class="shortcut-grid">
+    <th:block th:each="m : ${menus}" th:unless="${m.url == '/home'}">
+      <a class="shortcut" th:href="@{${m.url}}">
+        <span class="shortcut-icon"><svg class="ic ic-lg"><use th:href="'#' + ${m.icon}"/></svg></span>
+        <span th:text="${m.label}">Chức năng</span>
+        <small th:text="${m.description}">Mô tả chức năng</small>
+      </a>
+    </th:block>
+  </div>
+</main>
+</body>
+</html>

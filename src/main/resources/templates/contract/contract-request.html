@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+<head>
+  <title>Yêu cầu hợp đồng | Quản lý KTX</title>
+</head>
+<body>
+<!-- ===== Nhi: viết giao diện + xử lý gửi yêu cầu trong thẻ <main> (3 lựa chọn bên dưới là khung gợi ý) ===== -->
+<main>
+  <div class="page-title">
+    <svg class="ic ic-lg"><use href="#i-clipboard"/></svg>
+    <h1>Yêu cầu hợp đồng</h1>
+  </div>
+
+  <div class="card-box">
+    <p>Chọn một trong các yêu cầu dành cho hợp đồng ký túc xá hiện tại của bạn:</p>
+    <div class="shortcut-grid">
+      <div class="shortcut">
+        <span class="shortcut-icon"><svg class="ic ic-lg"><use href="#i-file"/></svg></span>
+        <span>Gia hạn hợp đồng</span>
+        <small>Tiếp tục ở thêm một kỳ</small>
+      </div>
+      <div class="shortcut">
+        <span class="shortcut-icon"><svg class="ic ic-lg"><use href="#i-logout"/></svg></span>
+        <span>Hủy hợp đồng</span>
+        <small>Không thuê nữa, trả phòng</small>
+      </div>
+      <div class="shortcut">
+        <span class="shortcut-icon"><svg class="ic ic-lg"><use href="#i-building"/></svg></span>
+        <span>Chuyển phòng</span>
+        <small>Đổi sang phòng khác</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-box placeholder" style="margin-top:16px">
+    <h2>Khu vực nội dung: Gửi yêu cầu</h2>
+    <p>File này: <code>templates/contract/contract-request.html</code><br>Nhi viết form chọn loại yêu cầu, lý do và nút gửi đè lên phần này.</p>
+  </div>
+</main>
+</body>
+</html>

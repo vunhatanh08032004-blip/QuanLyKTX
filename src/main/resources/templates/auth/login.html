@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/auth-layout :: authlayout(~{::title}, ~{::main})}">
+<head>
+  <title>Đăng nhập | Quản lý KTX</title>
+</head>
+<body>
+<main>
+  <h2 class="auth-title">Đăng nhập</h2>
+  <p class="auth-sub">Nhập tài khoản được cấp để sử dụng hệ thống.</p>
+
+  <div class="flash flash-error"   th:if="${param.error}">Sai tên đăng nhập hoặc mật khẩu.</div>
+  <div class="flash flash-error"   th:if="${param.locked}">Tài khoản của bạn đã bị khóa. Vui lòng liên hệ Ban quản lý KTX.</div>
+  <div class="flash flash-success" th:if="${param.logout}">Bạn đã đăng xuất thành công.</div>
+  <div class="flash flash-success" th:if="${param.registered}">Đăng ký thành công! Hãy đăng nhập bằng tài khoản vừa tạo.</div>
+  <div class="flash flash-success" th:if="${param.reset}">Đã đổi mật khẩu. Hãy đăng nhập bằng mật khẩu mới.</div>
+
+  <form th:action="@{/login}" method="post" novalidate>
+    <div class="field">
+      <label for="username">Tên đăng nhập</label>
+      <div class="input-icon">
+        <svg class="ic"><use href="#i-user"/></svg>
+        <input type="text" id="username" name="username" placeholder="VD: sv001" autocomplete="username" autofocus required>
+      </div>
+    </div>
+    <div class="field">
+      <label for="password">Mật khẩu</label>
+      <div class="input-icon">
+        <svg class="ic"><use href="#i-lock"/></svg>
+        <input type="password" id="password" name="password" placeholder="Nhập mật khẩu" autocomplete="current-password" required>
+      </div>
+    </div>
+    <div class="auth-row">
+      <span></span>
+      <a th:href="@{/forgot-password}">Quên mật khẩu?</a>
+    </div>
+    <button type="submit" class="btn-primary-app btn-block">Đăng nhập</button>
+  </form>
+
+  <p class="auth-switch">Sinh viên chưa có tài khoản? <a th:href="@{/register}">Đăng ký ngay</a></p>
+</main>
+</body>
+</html>

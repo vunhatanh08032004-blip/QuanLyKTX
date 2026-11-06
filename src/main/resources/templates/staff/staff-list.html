@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+<head>
+  <title>Quản lý nhân viên | Quản lý KTX</title>
+</head>
+<body>
+<main>
+  <div class="page-title">
+    <svg class="ic ic-lg"><use href="#i-users"/></svg>
+    <h1>Quản lý nhân viên</h1>
+    <a class="btn-primary-app spacer" th:href="@{/staff/new}">+ Thêm nhân viên</a>
+  </div>
+
+  <form class="card-box toolbar" method="get" th:action="@{/staff}">
+    <input type="text" name="q" th:value="${q}" placeholder="Tìm theo tên đăng nhập...">
+    <select name="role">
+      <option value="">Tất cả vai trò</option>
+      <option th:each="r : ${roleOptions}" th:value="${r.key}" th:text="${r.value}" th:selected="${r.key == role}"></option>
+    </select>
+    <button type="submit" class="btn-primary-app">Tìm</button>
+  </form>
+
+  <div class="card-box table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr><th>#</th><th>Tên đăng nhập</th><th>Vai trò</th><th>Trạng thái</th><th class="col-actions">Thao tác</th></tr>
+      </thead>
+      <tbody>
+        <tr th:each="t, st : ${staff}">
+          <td th:text="${st.count}">1</td>
+          <td><strong th:text="${t.tenDangNhap}">nv001</strong></td>
+          <td th:text="${T(com.example.QuanLyKTX.common.Roles).label(t.vaiTro.tenVaiTro)}">Nhân viên thu phí</td>
+          <td>
+            <span class="badge-app badge-danger" th:if="${t.trangThai == 'KHOA'}">Đã khóa</span>
+            <span class="badge-app badge-success" th:unless="${t.trangThai == 'KHOA'}">Hoạt động</span>
+          </td>
+          <td class="col-actions">
+            <a class="btn-outline-app" th:href="@{/staff/{id}/edit(id=${t.maTaiKhoan})}">Sửa</a>
+            <form th:action="@{/staff/{id}/lock(id=${t.maTaiKhoan})}" method="post" class="inline-form"
+                  onsubmit="return confirm('Xác nhận thay đổi trạng thái tài khoản này?');">
+              <button type="submit" class="btn-outline-app"
+                      th:classappend="${t.trangThai != 'KHOA'} ? 'btn-outline-danger'"
+                      th:text="${t.trangThai == 'KHOA'} ? 'Mở khóa' : 'Khóa'">Khóa</button>
+            </form>
+          </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(staff)}"><td colspan="5" class="empty-row">Chưa có nhân viên nào phù hợp.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+</body>
+</html>

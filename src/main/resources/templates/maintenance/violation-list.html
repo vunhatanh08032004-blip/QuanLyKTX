@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+<head>
+  <title>Vi phạm nội quy | Quản lý KTX</title>
+</head>
+<body>
+<!-- ===== Thơ: XÓA khối placeholder bên dưới và viết giao diện của bạn trong thẻ <main> ===== -->
+<main>
+  <div class="page-title">
+    <svg class="ic ic-lg"><use href="#i-alert"/></svg>
+    <h1>Vi phạm nội quy</h1>
+  </div>
+
+  <div class="card-box placeholder">
+    <svg class="ic ic-xl"><use href="#i-alert"/></svg>
+    <h2>Khu vực nội dung: Vi phạm nội quy</h2>
+    <p>File này: <code>templates/maintenance/violation-list.html</code><br>Thơ viết giao diện đè lên phần này.</p>
+  </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+<head>
+  <title>Tài khoản | Quản lý KTX</title>
+</head>
+<body>
+<main>
+  <div class="page-title">
+    <svg class="ic ic-lg"><use href="#i-user"/></svg>
+    <h1>Thông tin tài khoản</h1>
+  </div>
+
+  <div class="card-box">
+    <dl class="info-list">
+      <dt>Tên đăng nhập</dt><dd th:text="${currentUser.tenDangNhap}">sv001</dd>
+      <dt>Vai trò</dt><dd th:text="${currentUser.vaiTroLabel}">Sinh viên</dd>
+      <th:block th:if="${sinhVien != null}">
+        <dt>Họ và tên</dt><dd th:text="${sinhVien.hoTen}">Nguyễn Văn An</dd>
+        <dt>Mã sinh viên</dt><dd th:text="${sinhVien.maSoSinhVien}">2001240001</dd>
+        <dt>Lớp</dt><dd th:text="${sinhVien.lop} ?: '—'">15DHTH01</dd>
+        <dt>Khoa</dt><dd th:text="${sinhVien.khoa} ?: '—'">Công nghệ thông tin</dd>
+        <dt>Email</dt><dd th:text="${sinhVien.email} ?: '—'">an.sv@example.com</dd>
+        <dt>Số điện thoại</dt><dd th:text="${sinhVien.soDienThoai} ?: '—'">0900000001</dd>
+      </th:block>
+    </dl>
+  </div>
+</main>
+</body>
+</html>

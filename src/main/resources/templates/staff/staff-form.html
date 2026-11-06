@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+<head>
+  <title>Nhân viên | Quản lý KTX</title>
+</head>
+<body>
+<main>
+  <div class="page-title">
+    <svg class="ic ic-lg"><use href="#i-users"/></svg>
+    <h1 th:text="${isNew} ? 'Thêm nhân viên' : 'Sửa nhân viên'">Thêm nhân viên</h1>
+  </div>
+
+  <div class="card-box form-card">
+    <form th:action="${isNew} ? @{/staff} : @{/staff/{id}(id=${staffId})}" th:object="${form}" method="post" novalidate>
+
+      <div class="field">
+        <label for="tenDangNhap">Tên đăng nhập <b th:if="${isNew}">*</b></label>
+        <input type="text" id="tenDangNhap" th:field="*{tenDangNhap}" th:readonly="${!isNew}"
+               placeholder="VD: nv_thuphi01" autocomplete="off" th:errorclass="is-invalid">
+        <div class="field-error" th:if="${#fields.hasErrors('tenDangNhap')}" th:errors="*{tenDangNhap}"></div>
+      </div>
+
+      <div class="field">
+        <label for="vaiTro">Vai trò <b>*</b></label>
+        <select id="vaiTro" th:field="*{vaiTro}" th:errorclass="is-invalid">
+          <option value="">-- Chọn vai trò --</option>
+          <option th:each="r : ${roleOptions}" th:value="${r.key}" th:text="${r.value}"></option>
+        </select>
+        <div class="field-error" th:if="${#fields.hasErrors('vaiTro')}" th:errors="*{vaiTro}"></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label for="matKhau">
+            <span th:text="${isNew} ? 'Mật khẩu' : 'Mật khẩu mới (bỏ trống nếu không đổi)'">Mật khẩu</span>
+            <b th:if="${isNew}">*</b>
+          </label>
+          <input type="password" id="matKhau" th:field="*{matKhau}" placeholder="Ít nhất 6 ký tự"
+                 autocomplete="new-password" th:errorclass="is-invalid">
+          <div class="field-error" th:if="${#fields.hasErrors('matKhau')}" th:errors="*{matKhau}"></div>
+        </div>
+        <div class="field">
+          <label for="xacNhanMatKhau">Nhập lại mật khẩu</label>
+          <input type="password" id="xacNhanMatKhau" th:field="*{xacNhanMatKhau}" placeholder="Nhập lại mật khẩu"
+                 autocomplete="new-password" th:errorclass="is-invalid">
+          <div class="field-error" th:if="${#fields.hasErrors('xacNhanMatKhau')}" th:errors="*{xacNhanMatKhau}"></div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary-app" th:text="${isNew} ? 'Thêm nhân viên' : 'Lưu thay đổi'">Lưu</button>
+        <a class="btn-outline-app" th:href="@{/staff}">Hủy</a>
+      </div>
+    </form>
+  </div>
+</main>
+</body>
+</html>

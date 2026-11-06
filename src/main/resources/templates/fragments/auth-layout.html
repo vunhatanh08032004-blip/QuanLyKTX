@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:fragment="authlayout(title, content)">
+<head>
+  <title th:replace="${title}">Đăng nhập</title>
+  <th:block th:replace="~{fragments/head :: assets}"/>
+</head>
+<body class="auth-body">
+  <th:block th:replace="~{fragments/icons :: sprite}"/>
+  <div class="auth-wrap">
+    <section class="auth-brand">
+      <div class="auth-logo"><svg class="ic ic-xl"><use href="#i-home"/></svg></div>
+      <h1>Hệ thống Quản lý Ký túc xá</h1>
+      <p>Đăng ký lưu trú, xem phòng, hợp đồng, thanh toán và gửi phản ánh – tất cả trong một nơi.</p>
+      <ul>
+        <li><svg class="ic"><use href="#i-check"/></svg> Đăng ký ký túc xá trực tuyến</li>
+        <li><svg class="ic"><use href="#i-check"/></svg> Theo dõi hợp đồng &amp; hóa đơn</li>
+        <li><svg class="ic"><use href="#i-check"/></svg> Gửi phản ánh bảo trì nhanh chóng</li>
+      </ul>
+    </section>
+    <section class="auth-card">
+      <th:block th:replace="${content}"/>
+    </section>
+  </div>
+</body>
+</html>

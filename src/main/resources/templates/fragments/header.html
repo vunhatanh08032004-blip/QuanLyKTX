@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<header class="app-header" th:fragment="header">
+  <div class="header-left">
+    <button type="button" class="icon-btn menu-toggle" id="menuToggle" aria-label="Mở menu">
+      <svg class="ic"><use href="#i-menu"/></svg>
+    </button>
+    <a class="brand" th:href="@{/home}">
+      <svg class="ic ic-lg"><use href="#i-home"/></svg>
+      <span>Hệ thống Quản lý Ký túc xá</span>
+    </a>
+  </div>
+
+  <div class="header-right">
+    <button type="button" class="icon-btn" aria-label="Thông báo">
+      <svg class="ic"><use href="#i-bell"/></svg>
+    </button>
+
+    <!-- Đã đăng nhập: hiện tên người dùng ở góc trên bên phải -->
+    <div class="user-box" th:if="${currentUser != null}">
+      <span class="avatar" th:text="${currentUser.initial}">A</span>
+      <span class="user-text">
+        <small>Xin chào,</small>
+        <strong th:text="${currentUser.hoTen}">Tên người dùng</strong>
+      </span>
+    </div>
+
+    <!-- Chưa đăng nhập -->
+    <div class="user-box" th:if="${currentUser == null}">
+      <span class="avatar avatar-guest"><svg class="ic"><use href="#i-user"/></svg></span>
+      <span class="user-text">
+        <small>Xin chào,</small>
+        <strong>Khách</strong>
+      </span>
+    </div>
+  </div>
+</header>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+<head>
+  <title>Không có quyền truy cập | Quản lý KTX</title>
+</head>
+<body>
+<main>
+  <div class="card-box placeholder">
+    <svg class="ic ic-xl text-danger"><use href="#i-lock"/></svg>
+    <h2>Bạn không có quyền truy cập chức năng này</h2>
+    <p>Vui lòng quay lại trang chủ hoặc đăng nhập bằng tài khoản có quyền phù hợp.</p>
+    <a class="btn-primary-app" th:href="@{/home}">Về trang chủ</a>
+  </div>
+</main>
+</body>
+</html>

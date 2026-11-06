@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<aside class="app-sidebar" id="sidebar" th:fragment="sidebar">
+  <nav class="side-nav">
+    <!-- Menu tự đổi theo quyền (xem common/MenuBuilder.java) -->
+    <a class="side-link" th:each="m : ${menus}"
+       th:href="@{${m.url}}" th:classappend="${m.active} ? 'active'">
+      <svg class="ic"><use th:href="'#' + ${m.icon}"/></svg>
+      <span th:text="${m.label}">Mục menu</span>
+    </a>
+  </nav>
+
+  <!-- Cuối sidebar: Đăng xuất (đã đăng nhập) / Đăng nhập (chưa đăng nhập) -->
+  <div class="side-footer">
+    <div class="role-chip" th:if="${currentUser != null}" th:text="${currentUser.vaiTroLabel}">Vai trò</div>
+
+    <form th:if="${currentUser != null}" th:action="@{/logout}" method="post">
+      <button type="submit" class="btn-side btn-side-logout">
+        <svg class="ic"><use href="#i-logout"/></svg><span>Đăng xuất</span>
+      </button>
+    </form>
+
+    <th:block th:if="${currentUser == null}">
+      <a class="btn-side btn-side-login" th:href="@{/login}">
+        <svg class="ic"><use href="#i-login"/></svg><span>Đăng nhập</span>
+      </a>
+      <a class="side-register" th:href="@{/register}">Chưa có tài khoản? Đăng ký</a>
+    </th:block>
+  </div>
+</aside>
+</body>
+</html>
