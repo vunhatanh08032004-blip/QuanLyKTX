@@ -1,22 +1,56 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
-<head>
-  <title>Phản ánh - Bảo trì | Quản lý KTX</title>
-</head>
-<body>
-<!-- ===== Thơ: XÓA khối placeholder bên dưới và viết giao diện của bạn trong thẻ <main> ===== -->
-<main>
-  <div class="page-title">
-    <svg class="ic ic-lg"><use href="#i-chat"/></svg>
-    <h1>Phản ánh - Bảo trì</h1>
+<head><title>Phản ánh - Bảo trì | Quản lý KTX</title></head>
+<body><main>
+  <link rel="stylesheet" th:href="@{/css/maintenance.css}">
+  <div class="mt-head">
+    <div class="page-title"><svg class="ic ic-lg"><use href="#i-chat"/></svg><h1 th:text="${isStudent} ? 'Phản ánh của tôi' : (${isTechnician} ? 'Công việc bảo trì' : 'Phản ánh - Bảo trì')">Phản ánh - Bảo trì</h1></div>
+    <div class="mt-actions">
+      <a class="mt-button secondary" th:href="@{/maintenance/violation}" th:if="${!isTechnician}">Vi phạm nội quy</a>
+      <a class="mt-button" th:if="${isStudent}" th:href="@{/maintenance/new}">+ Gửi phản ánh mới</a>
+    </div>
   </div>
-
-  <div class="card-box placeholder">
-    <svg class="ic ic-xl"><use href="#i-chat"/></svg>
-    <h2>Khu vực nội dung: Phản ánh - Bảo trì</h2>
-    <p>File này: <code>templates/maintenance/feedback-list.html</code><br>Thơ viết giao diện đè lên phần này.</p>
+  <p class="mt-subtitle">Theo dõi tiến độ tiếp nhận, phân công và xử lý các sự cố tại ký túc xá.</p>
+  <div class="mt-stats">
+    <div class="mt-stat"><small>Phản ánh hiển thị</small><strong th:text="${#lists.size(feedbacks)}">0</strong></div>
+    <div class="mt-stat"><small>Mới gửi</small><strong th:text="${countNew}">0</strong></div>
+    <div class="mt-stat"><small>Đang sửa chữa</small><strong th:text="${countDoing}">0</strong></div>
+    <div class="mt-stat"><small>Đã hoàn tất</small><strong th:text="${countDone}">0</strong></div>
   </div>
-</main>
-</body>
-</html>
+  <section class="mt-panel">
+    <form th:action="@{/maintenance}" method="get" class="mt-filter">
+      <label class="mt-grow"><span class="mt-label">Tìm phản ánh</span>
+        <input class="mt-input" name="q" th:value="${q}" placeholder="Mã phản ánh, tiêu đề, tên sinh viên hoặc phòng"></label>
+      <label><span class="mt-label">Trạng thái</span><select class="mt-select" name="status">
+        <option value="">Tất cả trạng thái</option>
+        <option th:selected="${status == 'MOI_GUI'}" value="MOI_GUI">Mới gửi</option>
+        <option th:selected="${status == 'DANG_TIEP_NHAN'}" value="DANG_TIEP_NHAN">Đang tiếp nhận</option>
+        <option th:selected="${status == 'DA_PHAN_CONG'}" value="DA_PHAN_CONG">Đã phân công</option>
+        <option th:selected="${status == 'DANG_XU_LY'}" value="DANG_XU_LY">Đang xử lý</option>
+        <option th:selected="${status == 'CHO_NGHIEM_THU'}" value="CHO_NGHIEM_THU">Chờ nghiệm thu</option>
+        <option th:selected="${status == 'HOAN_TAT'}" value="HOAN_TAT">Hoàn tất</option>
+        <option th:selected="${status == 'TU_CHOI'}" value="TU_CHOI">Từ chối</option>
+      </select></label>
+      <button class="mt-button" type="submit">Tìm kiếm</button>
+      <a class="mt-button secondary" th:href="@{/maintenance}">Xóa lọc</a>
+    </form>
+  </section>
+  <section class="mt-panel">
+    <h2>Danh sách phản ánh</h2>
+    <div class="mt-table-wrap"><table class="mt-table">
+      <thead><tr><th>Mã</th><th>Nội dung sự cố</th><th>Phòng</th><th>Mức độ</th><th>Ngày gửi</th><th>Trạng thái</th><th></th></tr></thead>
+      <tbody>
+      <tr th:each="f : ${feedbacks}">
+        <td th:text="'PA' + ${f.id}">PA1</td>
+        <td><strong th:text="${f.title}">Thiết bị hỏng</strong><small th:if="${canManage}" th:text="${f.studentName} + ' · ' + ${f.studentCode}">Sinh viên</small><small th:if="${f.equipment != null}" th:text="${f.equipment}">Thiết bị</small></td>
+        <td th:text="${f.room}">A101</td><td><span class="mt-badge" th:classappend="${f.severity == 'KHAN_CAP' or f.severity == 'CAO'} ? 'danger' : ''" th:text="${f.severityLabel}">Cao</span></td>
+        <td th:text="${f.submittedAt == null ? '-' : #temporals.format(f.submittedAt, 'dd/MM/yyyy HH:mm')}">01/01/2026</td>
+        <td><span class="mt-badge" th:classappend="${f.status == 'HOAN_TAT'} ? 'ok' : (${f.status == 'TU_CHOI'} ? 'danger' : (${f.status == 'CHO_NGHIEM_THU'} ? 'warn' : ''))" th:text="${f.statusLabel}">Mới gửi</span></td>
+        <td><a th:href="@{/maintenance/{id}(id=${f.id})}">Chi tiết</a></td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(feedbacks)}"><td colspan="7" class="mt-empty">Chưa có phản ánh phù hợp với bộ lọc.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+</main></body></html>

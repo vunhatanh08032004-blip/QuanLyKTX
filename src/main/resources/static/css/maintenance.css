@@ -1,0 +1,57 @@
+/* Module Thơ – độc lập với app.css chung của Bình. */
+.mt-head { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:12px; margin-bottom:20px; }
+.mt-head .page-title { margin:0; }
+.mt-subtitle {color:#64748b; margin:0 0 20px; line-height:1.5;}
+.mt-actions {display:flex; flex-wrap:wrap; gap:8px; align-items:center;}
+.mt-button { display:inline-flex; align-items:center; justify-content:center; padding:10px 16px; background:#155bb5; border:1px solid #155bb5; color:white; border-radius:9px; font-size:14px; font-weight:600; cursor:pointer; text-decoration:none; }
+.mt-button:hover { background:#0e448d; color:white; text-decoration:none; }
+.mt-button.secondary {background:#fff; color:#155bb5; border-color:#adc8ea;}
+.mt-button.secondary:hover {background:#edf5ff;}
+.mt-button.danger {background:#fff; color:#af2929; border-color:#eab1b1;}
+.mt-button.danger:hover {background:#fff1f1;}
+.mt-button:disabled {opacity:.6; cursor:not-allowed;}
+.mt-stats {display:grid; grid-template-columns:repeat(4,minmax(130px,1fr)); gap:14px; margin-bottom:20px;}
+.mt-stat {background:#fff; border:1px solid #e1e8f1; border-radius:12px; padding:18px; box-shadow:0 1px 2px #dce5f144;}
+.mt-stat strong {display:block; font-size:27px; color:#1658a6; margin:6px 0 2px;}
+.mt-stat small {color:#5d6b81;}
+.mt-panel {background:#fff; border:1px solid #e1e8f1; border-radius:13px; padding:20px; margin-bottom:18px; box-shadow:0 1px 3px #dce5f144;}
+.mt-panel h2 {font-size:18px; margin:0 0 14px; color:#173560;}
+.mt-panel h3 {font-size:15px; margin:0 0 12px; color:#173560;}
+.mt-filter {display:flex; flex-wrap:wrap; gap:10px; align-items:end;}
+.mt-filter label {min-width:180px; flex:1;}
+.mt-filter label.mt-grow {flex:2;}
+.mt-label {display:block; font-size:13px; font-weight:600; margin-bottom:6px; color:#405169;}
+.mt-input, .mt-select, .mt-textarea { width:100%; box-sizing:border-box; border:1px solid #ccd8e5; border-radius:9px; padding:10px 12px; font:inherit; font-size:14px; color:#25354c; background:#fff;}
+.mt-input:focus, .mt-select:focus, .mt-textarea:focus {outline:2px solid #c4defc; border-color:#3582d1;}
+.mt-textarea {min-height:95px; resize:vertical;}
+.mt-table-wrap {overflow-x:auto; margin:0 -4px;}
+.mt-table {width:100%; border-collapse:collapse; min-width:680px; font-size:14px;}
+.mt-table th {text-align:left; color:#607087; font-weight:600; font-size:13px; padding:12px 10px; border-bottom:1px solid #dbe5f1; white-space:nowrap;}
+.mt-table td {padding:13px 10px; border-bottom:1px solid #ebf0f6; vertical-align:top;}
+.mt-table tbody tr:hover {background:#f7faff;}
+.mt-table td a {font-weight:600;}
+.mt-table td small {display:block; color:#64748b; margin-top:3px;}
+.mt-badge {display:inline-block; padding:5px 10px; border-radius:99px; font-size:12px; font-weight:700; background:#edf3fc; color:#315b9a; white-space:nowrap;}
+.mt-badge.ok {background:#dff5e8; color:#12663f;}
+.mt-badge.warn {background:#fff1cd; color:#8e6107;}
+.mt-badge.danger {background:#fde8e8; color:#a02c2c;}
+.mt-grid {display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px;}
+.mt-span {grid-column:1/-1;}
+.mt-kv {display:grid; grid-template-columns:170px 1fr; gap:10px 18px; margin:0; font-size:14px;}
+.mt-kv dt {font-weight:600; color:#66768b;}
+.mt-kv dd {margin:0; white-space:pre-wrap; overflow-wrap:anywhere;}
+.mt-notice {background:#f0f7ff; border:1px solid #b9d8fa; padding:13px 15px; border-radius:9px; color:#235084; margin-bottom:18px;}
+.mt-note-danger {background:#fff2f2; border-color:#f1bcbc; color:#9b2e2e;}
+.mt-history {list-style:none; padding:0; margin:0;}
+.mt-history li {padding:12px 0 12px 19px; border-left:2px solid #bdd8f6; position:relative; margin-left:6px;}
+.mt-history li:before {content:""; position:absolute; left:-6px; top:17px; width:9px; height:9px; border-radius:50%; background:#2976c1;}
+.mt-history li small {display:block; margin-top:4px; color:#64748b;}
+.mt-photo {max-width:100%; max-height:280px; object-fit:contain; border:1px solid #e2e9f2; border-radius:10px;}
+.mt-empty {padding:30px 12px; text-align:center; color:#66768b;}
+.mt-inline {display:flex;flex-wrap:wrap;gap:10px;align-items:end;}
+.mt-inline>* {flex:1;min-width:145px;}
+.mt-inline button {flex:0 0 auto;}
+.mt-muted {color:#6b7788;font-size:13px;}
+.mt-divider {height:1px; background:#e8edf4; margin:18px 0;}
+@media (max-width:820px){.mt-stats {grid-template-columns:repeat(2,minmax(0,1fr));} .mt-grid {grid-template-columns:1fr;}.mt-kv {grid-template-columns:110px 1fr;} }
+@media (max-width:480px){.mt-stats{grid-template-columns:1fr 1fr;gap:8px;}.mt-stat{padding:12px;}.mt-panel{padding:14px;}}

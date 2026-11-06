@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+<head><title>Chi tiết phản ánh | Quản lý KTX</title></head><body><main>
+  <link rel="stylesheet" th:href="@{/css/maintenance.css}">
+  <div class="mt-head"><div class="page-title"><svg class="ic ic-lg"><use href="#i-chat"/></svg><h1 th:text="'Phản ánh PA' + ${f.id}">Chi tiết phản ánh</h1></div>
+    <a class="mt-button secondary" th:href="@{/maintenance}">← Danh sách</a></div>
+  <div class="mt-grid">
+    <section class="mt-panel">
+      <h2>Thông tin phản ánh</h2>
+      <dl class="mt-kv">
+        <dt>Tiêu đề</dt><dd><strong th:text="${f.title}">Sự cố</strong></dd>
+        <dt>Sinh viên</dt><dd th:text="${f.studentName} + ' (' + ${f.studentCode} + ')'">Nguyễn Văn A</dd>
+        <dt>Phòng</dt><dd th:text="${f.room}">A101</dd>
+        <dt>Thiết bị</dt><dd th:text="${f.equipment ?: 'Không xác định'}">Quạt</dd>
+        <dt>Ngày gửi</dt><dd th:text="${f.submittedAt == null ? '-' : #temporals.format(f.submittedAt, 'dd/MM/yyyy HH:mm')}">...</dd>
+        <dt>Thời điểm sự cố</dt><dd th:text="${f.happenedAt == null ? 'Không khai báo' : #temporals.format(f.happenedAt, 'dd/MM/yyyy HH:mm')}">...</dd>
+        <dt>Mức độ</dt><dd><span class="mt-badge" th:text="${f.severityLabel}">Cao</span></dd>
+        <dt>Trạng thái</dt><dd><span class="mt-badge" th:classappend="${f.status == 'HOAN_TAT'} ? 'ok' : (${f.status == 'TU_CHOI'} ? 'danger' : 'warn')" th:text="${f.statusLabel}">Mới gửi</span></dd>
+        <dt>Mô tả chi tiết</dt><dd th:text="${f.description}">Sự cố</dd>
+        <dt th:if="${f.rejectReason != null}">Lý do từ chối</dt><dd th:if="${f.rejectReason != null}" th:text="${f.rejectReason}">Lý do</dd>
+      </dl>
+      <div th:if="${!#lists.isEmpty(attachments)}" class="mt-divider"></div>
+      <div th:each="a : ${attachments}" th:if="${#strings.startsWith(a.path, 'uploads/maintenance/')}" style="margin-top:12px">
+        <a th:href="@{/maintenance/attachment/{id}(id=${a.id})}" target="_blank" rel="noopener"><img class="mt-photo" th:src="@{/maintenance/attachment/{id}(id=${a.id})}" alt="Ảnh sự cố"></a>
+      </div>
+    </section>
+    <section class="mt-panel">
+      <h2>Phân công và kết quả sửa chữa</h2>
+      <div class="mt-notice" th:if="${f.assignmentId == null}">Chưa có nhân viên kỹ thuật được phân công.</div>
+      <dl class="mt-kv" th:if="${f.assignmentId != null}">
+        <dt>Kỹ thuật viên</dt><dd th:text="${f.technicianName}">nvbaotri</dd>
+        <dt>Hạn xử lý</dt><dd th:text="${f.dueAt == null ? 'Chưa có' : #temporals.format(f.dueAt, 'dd/MM/yyyy HH:mm')}">...</dd>
+        <dt>Kiểm tra</dt><dd th:text="${f.inspection ?: 'Chưa cập nhật'}">Chưa có</dd>
+        <dt>Sửa chữa</dt><dd th:text="${f.repair ?: 'Chưa cập nhật'}">Chưa có</dd>
+        <dt>Chi phí</dt><dd th:text="${f.cost == null ? '0 đ' : #numbers.formatDecimal(f.cost, 1, 'COMMA', 0, 'POINT') + ' đ'}">0 đ</dd>
+        <dt>Duyệt chi phí</dt><dd th:text="${f.approvalLabel}">...</dd>
+        <dt>Ghi chú duyệt</dt><dd th:text="${f.approvalNote ?: '-'}">-</dd>
+      </dl>
+      <div th:if="${!#lists.isEmpty(materials)}"><div class="mt-divider"></div><h3>Vật tư đã dùng</h3>
+        <div class="mt-table-wrap"><table class="mt-table" style="min-width:450px"><thead><tr><th>Vật tư</th><th>SL</th><th>Đơn giá</th><th>Thành tiền</th><th th:if="${isTechnician and f.status == 'DANG_XU_LY'}"></th></tr></thead><tbody>
+          <tr th:each="m : ${materials}"><td th:text="${m.name}">Vật tư</td><td th:text="${m.quantity}">1</td>
+            <td th:text="${#numbers.formatDecimal(m.unitPrice,1,'COMMA',0,'POINT')}">0</td>
+            <td th:text="${#numbers.formatDecimal(m.amount,1,'COMMA',0,'POINT')}">0</td>
+            <td th:if="${isTechnician and f.status == 'DANG_XU_LY'}"><form method="post" th:action="@{/maintenance/{id}/material/{materialId}/remove(id=${f.id},materialId=${m.id})}"><button type="submit" class="mt-button danger" style="padding:5px 8px">Xóa</button></form></td></tr>
+        </tbody></table></div>
+      </div>
+    </section>
+  </div>
+  <section class="mt-panel" th:if="${canManage and (f.status == 'MOI_GUI' or f.status == 'DANG_TIEP_NHAN' or f.status == 'DA_PHAN_CONG')}">
+    <h2>Tiếp nhận và phân công <small class="mt-muted">(Nhân viên quản lý / Ban quản lý)</small></h2>
+    <div class="mt-actions" th:if="${f.status == 'MOI_GUI'}">
+      <form th:action="@{/maintenance/{id}/receive(id=${f.id})}" method="post"><button class="mt-button" type="submit">Tiếp nhận</button></form>
+    </div>
+    <div class="mt-divider"></div>
+    <form th:action="@{/maintenance/{id}/assign(id=${f.id})}" method="post" class="mt-inline">
+      <label><span class="mt-label">Chọn kỹ thuật viên *</span><select class="mt-select" name="technicianId" required>
+        <option value="">-- Chọn --</option><option th:each="t : ${technicians}" th:value="${t.id}" th:text="${t.label}">nvbaotri</option>
+      </select></label><label><span class="mt-label">Hạn xử lý</span><input class="mt-input" type="datetime-local" name="due"></label>
+      <button class="mt-button" type="submit">Phân công / phân công lại</button>
+    </form>
+    <div class="mt-divider" th:if="${f.assignmentId == null}"></div>
+    <form th:if="${f.assignmentId == null and (f.status == 'MOI_GUI' or f.status == 'DANG_TIEP_NHAN')}" th:action="@{/maintenance/{id}/reject(id=${f.id})}" method="post" class="mt-inline">
+      <label><span class="mt-label">Lý do từ chối *</span><input class="mt-input" name="reason" maxlength="500" required></label>
+      <button class="mt-button danger" type="submit">Từ chối phản ánh</button>
+    </form>
+  </section>
+  <section class="mt-panel" th:if="${isTechnician and f.assignmentId != null and (f.status == 'DA_PHAN_CONG' or f.status == 'DANG_TIEP_NHAN' or f.status == 'MOI_GUI')}">
+    <h2>Bắt đầu công việc</h2><form th:action="@{/maintenance/{id}/start(id=${f.id})}" method="post"><button class="mt-button" type="submit">Bắt đầu xử lý</button></form>
+  </section>
+  <section class="mt-panel" th:if="${isTechnician and f.status == 'DANG_XU_LY'}">
+    <h2>Cập nhật công việc kỹ thuật</h2>
+    <form th:action="@{/maintenance/{id}/material(id=${f.id})}" method="post" class="mt-inline">
+      <label><span class="mt-label">Vật tư</span><input class="mt-input" name="name" maxlength="150" required placeholder="Ví dụ: Bóng đèn LED"></label>
+      <label><span class="mt-label">Số lượng</span><input class="mt-input" type="number" min="1" max="10000" value="1" name="quantity" required></label>
+      <label><span class="mt-label">Đơn giá (đ)</span><input class="mt-input" type="number" min="0.01" step="0.01" name="price" required></label>
+      <button class="mt-button secondary" type="submit">Thêm vật tư</button>
+    </form>
+    <p class="mt-muted" style="margin-top:8px">Tổng chi phí tự tính từ vật tư. Khi thêm vật tư, chi phí được gửi Ban quản lý duyệt lại.</p>
+    <div class="mt-divider"></div>
+    <form th:action="@{/maintenance/{id}/result(id=${f.id})}" method="post">
+      <div class="mt-grid"><label class="mt-span"><span class="mt-label">Kết quả kiểm tra *</span><textarea class="mt-textarea" name="inspection" maxlength="10000" required th:text="${f.inspection}"></textarea></label>
+      <label class="mt-span"><span class="mt-label">Nội dung sửa chữa *</span><textarea class="mt-textarea" name="repair" maxlength="10000" required th:text="${f.repair}"></textarea></label></div>
+      <div class="mt-actions" style="margin-top:14px"><button class="mt-button" type="submit">Gửi kết quả sửa chữa</button></div>
+    </form>
+  </section>
+  <section class="mt-panel" th:if="${isAdmin and f.assignmentId != null and f.approvalStatus == 'CHO_DUYET'}">
+    <h2>Ban quản lý duyệt chi phí</h2>
+    <p class="mt-notice">Phần chi phí vật tư đang chờ phê duyệt. Kỹ thuật viên không thể tự duyệt.</p>
+    <form th:action="@{/maintenance/{id}/approve(id=${f.id})}" method="post">
+      <label><span class="mt-label">Ghi chú / lý do từ chối</span><textarea class="mt-textarea" name="note" maxlength="500" placeholder="Cần ghi lý do nếu không duyệt"></textarea></label>
+      <div class="mt-actions" style="margin-top:12px">
+        <button class="mt-button" type="submit" name="verdict" value="APPROVE">Duyệt chi phí</button>
+        <button class="mt-button danger" type="submit" name="verdict" value="REJECT">Không duyệt</button>
+      </div>
+    </form>
+  </section>
+  <section class="mt-panel" th:if="${canManage and f.status == 'CHO_NGHIEM_THU'}">
+    <h2>Nghiệm thu</h2>
+    <p class="mt-notice" th:if="${f.cost != null and f.cost > 0 and (f.approvalStatus != 'DA_DUYET' and f.approvalStatus != 'KHONG_CAN')}">Chi phí chưa được duyệt. Ban quản lý cần duyệt trước khi hoàn tất.</p>
+    <form th:action="@{/maintenance/{id}/finish(id=${f.id})}" method="post">
+      <button class="mt-button" type="submit" th:disabled="${f.cost != null and f.cost > 0 and (f.approvalStatus != 'DA_DUYET' and f.approvalStatus != 'KHONG_CAN')}">Xác nhận nghiệm thu / Hoàn tất</button>
+    </form>
+  </section>
+  <section class="mt-panel">
+    <h2>Lịch sử xử lý</h2>
+    <ol class="mt-history"><li th:each="h : ${history}"><strong th:text="${h.status}">Trạng thái</strong> – <span th:text="${h.note}">...</span>
+      <small th:text="${(h.at == null ? '' : #temporals.format(h.at, 'dd/MM/yyyy HH:mm')) + ' · ' + (h.by ?: 'Hệ thống')}">...</small></li>
+      <li th:if="${#lists.isEmpty(history)}" class="mt-muted">Chưa có lịch sử ghi nhận.</li></ol>
+  </section>
+</main></body></html>
