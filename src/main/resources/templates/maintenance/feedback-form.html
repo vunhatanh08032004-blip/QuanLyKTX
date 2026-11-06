@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+<head><title>Gửi phản ánh | Quản lý KTX</title></head><body><main>
+  <link rel="stylesheet" th:href="@{/css/maintenance.css}">
+  <div class="mt-head"><div class="page-title"><svg class="ic ic-lg"><use href="#i-chat"/></svg><h1>Gửi phản ánh/bảo trì</h1></div>
+  <a class="mt-button secondary" th:href="@{/maintenance}">← Danh sách</a></div>
+  <p class="mt-subtitle">Gửi sự cố ở phòng bạn đang lưu trú. Nhân viên quản lý sẽ tiếp nhận và giao kỹ thuật viên xử lý.</p>
+  <div class="mt-notice" th:if="${#lists.isEmpty(rooms)}">Bạn chưa có phòng lưu trú đang hoạt động. Vui lòng liên hệ nhân viên quản lý để kiểm tra phân phòng trước khi gửi phản ánh.</div>
+  <section class="mt-panel" style="max-width:840px" th:if="${!#lists.isEmpty(rooms)}">
+    <h2>Thông tin sự cố</h2>
+    <form th:action="@{/maintenance/new}" method="post" enctype="multipart/form-data">
+      <div class="mt-grid">
+        <label><span class="mt-label">Phòng đang ở *</span><select name="maPhong" class="mt-select" required>
+          <option th:each="r : ${rooms}" th:value="${r.id}" th:text="${r.id} + ' · ' + ${r.label}">A101</option>
+        </select></label>
+        <label><span class="mt-label">Thiết bị liên quan</span><input class="mt-input" name="tenThietBi" maxlength="100" placeholder="Ví dụ: Quạt trần, vòi nước"></label>
+        <label class="mt-span"><span class="mt-label">Tiêu đề *</span><input class="mt-input" name="tieuDe" maxlength="200" required placeholder="Mô tả ngắn sự cố"></label>
+        <label class="mt-span"><span class="mt-label">Mô tả chi tiết *</span><textarea class="mt-textarea" name="moTa" maxlength="10000" required placeholder="Sự cố xảy ra như thế nào? Thiết bị còn dùng được không?"></textarea></label>
+        <label><span class="mt-label">Thời điểm xảy ra</span><input class="mt-input" type="datetime-local" name="thoiDiemXayRa"></label>
+        <label><span class="mt-label">Mức độ *</span><select class="mt-select" name="mucDo" required>
+          <option value="THAP">Thấp</option><option value="TRUNG_BINH" selected>Trung bình</option><option value="CAO">Cao</option><option value="KHAN_CAP">Khẩn cấp</option>
+        </select></label>
+        <label class="mt-span"><span class="mt-label">Ảnh minh họa (không bắt buộc, tối đa 5 MB)</span>
+          <input class="mt-input" type="file" name="anh" accept="image/jpeg,image/png,image/webp"><small class="mt-muted">Hỗ trợ JPG, PNG, WEBP. Ảnh chỉ người có quyền liên quan mới xem được.</small>
+        </label>
+      </div>
+      <div class="mt-divider"></div><div class="mt-actions"><button type="submit" class="mt-button">Gửi phản ánh</button><a class="mt-button secondary" th:href="@{/maintenance}">Hủy</a></div>
+    </form>
+  </section>
+</main></body></html>

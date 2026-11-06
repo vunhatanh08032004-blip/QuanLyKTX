@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+<head><title>Lập biên bản vi phạm | Quản lý KTX</title></head><body><main>
+  <link rel="stylesheet" th:href="@{/css/maintenance.css}">
+  <div class="mt-head"><div class="page-title"><svg class="ic ic-lg"><use href="#i-alert"/></svg><h1>Lập biên bản vi phạm</h1></div>
+    <a class="mt-button secondary" th:href="@{/maintenance/violation}">← Danh sách</a></div>
+  <div class="mt-notice">Chỉ nhân viên quản lý ký túc xá được lập biên bản. Ban quản lý quyết định hình thức xử lý.</div>
+  <section class="mt-panel" style="max-width:860px"><h2>Thông tin vi phạm</h2>
+    <form th:action="@{/maintenance/violation/new}" method="post">
+      <div class="mt-grid">
+        <label class="mt-span"><span class="mt-label">Sinh viên liên quan *</span><select class="mt-select" name="studentId" required>
+          <option value="">-- Chọn sinh viên --</option>
+          <option th:each="s : ${students}" th:value="${s.id}" th:text="${s.label}">Sinh viên</option>
+        </select></label>
+        <label><span class="mt-label">Mã phòng (nếu có)</span><input class="mt-input" name="room" maxlength="20" placeholder="Ví dụ A101"><small class="mt-muted">Chỉ nhập đúng phòng đang lưu trú của sinh viên.</small></label>
+        <label><span class="mt-label">Thời điểm vi phạm *</span><input class="mt-input" type="datetime-local" name="when" required></label>
+        <label><span class="mt-label">Địa điểm *</span><input class="mt-input" name="place" maxlength="200" required placeholder="Ví dụ: Hành lang tầng 2"></label>
+        <label><span class="mt-label">Mức độ *</span><select class="mt-select" name="severity" required>
+          <option value="NHE">Nhẹ</option><option value="TRUNG_BINH">Trung bình</option><option value="NGHIEM_TRONG">Nghiêm trọng</option>
+        </select></label>
+        <label class="mt-span"><span class="mt-label">Nội dung vi phạm *</span><textarea class="mt-textarea" name="description" maxlength="10000" required placeholder="Ghi rõ hành vi, tình huống và nội quy bị vi phạm"></textarea></label>
+      </div>
+      <div class="mt-divider"></div><div class="mt-actions"><button class="mt-button" type="submit">Lưu biên bản</button><a class="mt-button secondary" th:href="@{/maintenance/violation}">Hủy</a></div>
+    </form>
+  </section>
+</main></body></html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+<head><title>Chi tiết vi phạm | Quản lý KTX</title></head><body><main>
+  <link rel="stylesheet" th:href="@{/css/maintenance.css}">
+  <div class="mt-head"><div class="page-title"><svg class="ic ic-lg"><use href="#i-alert"/></svg><h1 th:text="'Biên bản BB' + ${v.id}">Biên bản vi phạm</h1></div>
+    <a class="mt-button secondary" th:href="@{/maintenance/violation}">← Danh sách</a></div>
+  <div class="mt-grid">
+    <section class="mt-panel"><h2>Thông tin biên bản</h2>
+      <dl class="mt-kv">
+        <dt>Sinh viên</dt><dd th:text="${v.studentName} + ' (' + ${v.studentCode} + ')'">Sinh viên</dd>
+        <dt>Phòng</dt><dd th:text="${v.room ?: 'Không ghi nhận'}">A101</dd>
+        <dt>Địa điểm</dt><dd th:text="${v.place}">...</dd>
+        <dt>Thời điểm</dt><dd th:text="${v.happenedAt == null ? '-' : #temporals.format(v.happenedAt,'dd/MM/yyyy HH:mm')}">...</dd>
+        <dt>Người lập</dt><dd th:text="${v.recordedBy}">nvquanly</dd>
+        <dt>Mức độ</dt><dd><span class="mt-badge" th:classappend="${v.severity == 'NGHIEM_TRONG'} ? 'danger' : ''" th:text="${v.severityLabel}">Nhẹ</span></dd>
+        <dt>Trạng thái</dt><dd><span class="mt-badge" th:classappend="${v.resolution != null} ? 'ok' : 'warn'" th:text="${v.statusLabel}">Mới lập</span></dd>
+        <dt>Nội dung</dt><dd th:text="${v.description}">...</dd>
+      </dl>
+    </section>
+    <section class="mt-panel"><h2>Quyết định xử lý</h2>
+      <div class="mt-notice" th:if="${v.resolution == null}">Biên bản đang chờ Ban quản lý quyết định hình thức xử lý.</div>
+      <dl class="mt-kv" th:if="${v.resolution != null}">
+        <dt>Hình thức</dt><dd><strong th:text="${v.resolution}">Nhắc nhở</strong></dd>
+        <dt>Số tiền phạt</dt><dd th:text="${v.fine == null ? 'Không' : #numbers.formatDecimal(v.fine,1,'COMMA',0,'POINT') + ' đ'}">Không</dd>
+        <dt>Ngày quyết định</dt><dd th:text="${v.resolvedAt == null ? '-' : #temporals.format(v.resolvedAt,'dd/MM/yyyy HH:mm')}">...</dd>
+        <dt>Ghi chú</dt><dd th:text="${v.resolutionNote ?: 'Không có'}">...</dd>
+      </dl>
+      <p class="mt-muted" th:if="${v.fine != null}">Mức phạt được ghi nhận tại biên bản; việc lập hóa đơn và thu tiền thuộc module Thu phí - Thanh toán.</p>
+    </section>
+  </div>
+  <section class="mt-panel" th:if="${isManager and v.resolution == null and v.status == 'MOI_LAP'}">
+    <h2>Trình biên bản cho Ban quản lý</h2>
+    <form th:action="@{/maintenance/violation/{id}/review(id=${v.id})}" method="post"><button class="mt-button" type="submit">Chuyển chờ xem xét</button></form>
+  </section>
+  <section class="mt-panel" th:if="${isAdmin and v.resolution == null}">
+    <h2>Ban quản lý quyết định xử lý</h2>
+    <form th:action="@{/maintenance/violation/{id}/decide(id=${v.id})}" method="post">
+      <div class="mt-grid">
+        <label><span class="mt-label">Hình thức xử lý *</span><select class="mt-select" name="method" required>
+          <option value="Nhắc nhở">Nhắc nhở</option><option value="Khiển trách">Khiển trách</option>
+          <option value="Cảnh cáo">Cảnh cáo</option><option value="Phạt tiền">Phạt tiền</option>
+          <option value="Bồi thường">Bồi thường</option>
+        </select></label>
+        <label><span class="mt-label">Số tiền phạt (nếu có)</span><input class="mt-input" type="number" name="fine" min="0" step="0.01" placeholder="0"></label>
+        <label class="mt-span"><span class="mt-label">Ghi chú</span><textarea class="mt-textarea" name="note" maxlength="500" placeholder="Giải thích quyết định"></textarea></label>
+      </div>
+      <div class="mt-actions" style="margin-top:12px"><button class="mt-button" type="submit">Lưu quyết định</button></div>
+    </form>
+  </section>
+</main></body></html>
