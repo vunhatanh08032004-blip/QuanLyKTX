@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+
+<head>
+    <title>Quản lý hợp đồng | Quản lý KTX</title>
+</head>
+
+<body>
+<main>
+
+    <div class="page-title">
+        <svg class="ic ic-lg">
+            <use href="#i-file"/>
+        </svg>
+
+        <!-- Nếu có mã hợp đồng thì hiển thị Sửa, ngược lại hiển thị Lập mới -->
+        <h1 th:text="${hopDong.maHopDong != null ? 'Sửa hợp đồng' : 'Lập hợp đồng mới'}">
+            Lập hợp đồng mới
+        </h1>
+    </div>
+
+    <div class="card-box">
+
+        <h2 style="font-size: 18px; margin-bottom: 20px;">
+            Thông tin hợp đồng
+        </h2>
+
+        <!-- Form gửi dữ liệu về ContractController -->
+        <form th:action="@{/contract/save}"
+              th:object="${hopDong}"
+              method="post"
+              id="contractForm"
+              onsubmit="return validateDates();">
+
+            <!-- Mã hợp đồng: dùng để nhận biết khi sửa -->
+            <input type="hidden" th:field="*{maHopDong}">
+
+            <!-- Mã sinh viên -->
+            <div style="margin-bottom: 15px;">
+                <label>Mã sinh viên:</label>
+                <input type="number"
+                       th:field="*{maSinhVien}"
+                       class="form-control"
+                       placeholder="Nhập mã sinh viên"
+                       required>
+            </div>
+
+            <!-- Mã phòng -->
+            <div style="margin-bottom: 15px;">
+                <label>Mã phòng:</label>
+                <input type="text"
+                       th:field="*{maPhong}"
+                       class="form-control"
+                       placeholder="Ví dụ: A101"
+                       required>
+            </div>
+
+            <!-- Ngày bắt đầu -->
+            <div style="margin-bottom: 15px;">
+                <label>Ngày bắt đầu:</label>
+                <input type="date"
+                       id="ngayBatDau"
+                       th:field="*{ngayBatDau}"
+                       class="form-control"
+                       required>
+            </div>
+
+            <!-- Ngày kết thúc -->
+            <div style="margin-bottom: 15px;">
+                <label>Ngày kết thúc:</label>
+                <input type="date"
+                       id="ngayKetThuc"
+                       th:field="*{ngayKetThuc}"
+                       class="form-control"
+                       required>
+            </div>
+
+            <!-- Giá thuê -->
+            <div style="margin-bottom: 15px;">
+                <label>Giá thuê (VNĐ):</label>
+                <input type="number"
+                       th:field="*{giaThue}"
+                       class="form-control"
+                       placeholder="Nhập giá thuê"
+                       min="0"
+                       step="any"
+                       required>
+            </div>
+
+            <!-- Trạng thái -->
+            <div style="margin-bottom: 20px;">
+                <label>Trạng thái:</label>
+                <select th:field="*{trangThai}" class="form-control">
+                    <option value="Hiệu lực">Hiệu lực</option>
+                    <option value="Gia hạn">Gia hạn</option>
+                    <option value="Sắp hết hạn">Sắp hết hạn</option>
+                    <option value="Đã hết hạn">Đã hết hạn</option>
+                    <option value="Đã hủy">Đã hủy</option>
+                </select>
+            </div>
+
+            <!-- Nút lưu -->
+            <button type="submit" class="btn btn-primary">
+                Lưu hợp đồng
+            </button>
+
+            <a th:href="@{/contract}"
+               class="btn btn-secondary">
+                Quay lại
+            </a>
+
+        </form>
+
+    </div>
+
+    <!-- Script tự động giới hạn ngày và kiểm tra logic trước khi submit -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var ngayBatDauInput = document.getElementById("ngayBatDau");
+            var ngayKetThucInput = document.getElementById("ngayKetThuc");
+
+            // Kiểm tra xem đang ở trang Lập mới hay Sửa dựa vào URL (nếu URL chứa /new thì là lập mới)
+            var isNew = window.location.pathname.includes("/new");
+
+            if (isNew) {
+                // Lấy ngày hiện tại theo định dạng YYYY-MM-DD
+                var today = new Date().toISOString().split('T')[0];
+
+                // Ràng buộc ô Ngày bắt đầu không được chọn quá khứ (từ hôm nay trở đi)
+                ngayBatDauInput.setAttribute("min", today);
+                ngayBatDauInput.value = today; // Mặc định điền luôn ngày hôm nay cho tiện
+
+                // Khi ngày bắt đầu thay đổi, tự động cập nhật giới hạn min của ngày kết thúc phải lớn hơn ngày bắt đầu
+                ngayBatDauInput.addEventListener("change", function() {
+                    ngayKetThucInput.setAttribute("min", ngayBatDauInput.value);
+                    if (ngayKetThucInput.value && ngayKetThucInput.value <= ngayBatDauInput.value) {
+                        ngayKetThucInput.value = ""; // Xóa giá trị cũ nếu nó nhỏ hơn ngày bắt đầu mới
+                    }
+                });
+
+                // Thiết lập ban đầu cho ngày kết thúc
+                ngayKetThucInput.setAttribute("min", today);
+            }
+        });
+
+        // Hàm kiểm tra an toàn khi bấm nút "Lưu hợp đồng"
+        function validateDates() {
+            var start = document.getElementById("ngayBatDau").value;
+            var end = document.getElementById("ngayKetThuc").value;
+
+            if (start && end && start >= end) {
+                alert("Lỗi: Ngày kết thúc bắt buộc phải lớn hơn ngày bắt đầu!");
+                return false; // Chặn không cho form gửi đi
+            }
+            return true; // Cho phép gửi form nếu hợp lệ
+        }
+    </script>
+
+</main>
+</body>
+</html>
