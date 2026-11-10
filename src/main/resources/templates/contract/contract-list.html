@@ -5,17 +5,74 @@
   <title>Quản lý hợp đồng | Quản lý KTX</title>
 </head>
 <body>
-<!-- ===== Nhi: XÓA khối placeholder bên dưới và viết giao diện của bạn trong thẻ <main> ===== -->
 <main>
   <div class="page-title">
     <svg class="ic ic-lg"><use href="#i-file"/></svg>
     <h1>Quản lý hợp đồng</h1>
   </div>
 
-  <div class="card-box placeholder">
-    <svg class="ic ic-xl"><use href="#i-file"/></svg>
-    <h2>Khu vực nội dung: Quản lý hợp đồng</h2>
-    <p>File này: <code>templates/contract/contract-list.html</code><br>Nhi viết giao diện đè lên phần này.</p>
+  <div class="card-box" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+    <form th:action="@{/contract}" method="get" style="display: flex; gap: 10px; flex: 1; min-width: 280px;">
+      <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm kiếm mã hợp đồng, sinh viên, phòng..." class="form-control" style="padding: 8px 12px; border: 1px solid #ced4da; border-radius: 6px; width: 100%;">
+      <button type="submit" class="btn btn-secondary" style="padding: 8px 16px; background-color: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer;">Tìm</button>
+    </form>
+    <div>
+      <a href="/contract/new" class="btn btn-primary" style="background-color: #0d6efd; color: white; padding: 8px 16px; text-decoration: none; border-radius: 6px; font-weight: 500;">
+        + Lập hợp đồng mới
+      </a>
+    </div>
+  </div>
+
+  <div class="card-box">
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead>
+        <tr style="border-bottom: 2px solid #dee2e6; color: #495057;">
+          <th style="padding: 12px;">Mã HĐ</th>
+          <th style="padding: 12px;">Sinh viên</th>
+          <th style="padding: 12px;">Phòng</th>
+          <th style="padding: 12px;">Ngày bắt đầu</th>
+          <th style="padding: 12px;">Ngày kết thúc</th>
+          <th style="padding: 12px;">Giá thuê (VNĐ)</th>
+          <th style="padding: 12px;">Trạng thái</th>
+          <th style="padding: 12px; text-align: center;">Thao tác</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="hd : ${listHopDong}" style="border-bottom: 1px solid #dee2e6;">
+          <td style="padding: 12px; font-weight: 600;" th:text="${'#' + hd.maHopDong}">#01</td>
+          <td style="padding: 12px;" th:text="${'Sinh viên ID: ' + hd.maSinhVien}">Tên sinh viên</td>
+          <td style="padding: 12px;" th:text="${hd.maPhong}">A101</td>
+          <td style="padding: 12px;" th:text="${hd.ngayBatDau}">2025-09-01</td>
+          <td style="padding: 12px;" th:text="${hd.ngayKetThuc}">2026-08-31</td>
+          <td style="padding: 12px; color: #198754; font-weight: 600;" th:text="${#numbers.formatDecimal(hd.giaThue, 0, 'COMMA', 0, 'POINT') + ' đ'}">3,500,000</td>
+          <td style="padding: 12px;">
+            <!-- Trạng thái Hiệu lực hoặc Gia hạn: Màu xanh lá -->
+            <span th:if="${hd.trangThai == 'Hiệu lực' or hd.trangThai == 'Gia hạn'}"
+                  style="background-color: #d1e7dd; color: #0f5132; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;"
+                  th:text="${hd.trangThai}">Hiệu lực</span>
+
+            <!-- Trạng thái Sắp hết hạn: Màu vàng/cam -->
+            <span th:if="${hd.trangThai == 'Sắp hết hạn'}"
+                  style="background-color: #fff3cd; color: #664d03; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;"
+                  th:text="${hd.trangThai}">Sắp hết hạn</span>
+
+            <!-- Trạng thái Đã hết hạn hoặc Đã hủy: Màu xám tối -->
+            <span th:if="${hd.trangThai == 'Đã hết hạn' or hd.trangThai == 'Đã hủy'}"
+                  style="background-color: #e2e3e5; color: #383d41; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;"
+                  th:text="${hd.trangThai}">Đã hết hạn</span>
+          </td>
+          <td style="padding: 12px; text-align: center; white-space: nowrap;">
+            <a th:href="@{/contract/detail/{id}(id=${hd.maHopDong})}" style="margin-right: 8px; color: #0d6efd; text-decoration: none; font-weight: 500;">Chi tiết</a>
+            <a th:href="@{/contract/edit/{id}(id=${hd.maHopDong})}" style="margin-right: 8px; color: #ffc107; text-decoration: none; font-weight: 500;">Sửa</a>
+            <a th:href="@{/contract/delete/{id}(id=${hd.maHopDong})}"
+               onclick="return confirm('Bạn có chắc chắn muốn xóa hợp đồng này không?');"
+               style="color: #dc3545; text-decoration: none; font-weight: 500;">Xóa</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </main>
 </body>
