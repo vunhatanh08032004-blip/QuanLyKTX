@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+
+<head>
+    <title>Chi tiết hợp đồng | Quản lý KTX</title>
+</head>
+
+<body>
+<main>
+
+    <!-- Tiêu đề trang -->
+    <div class="page-title">
+        <svg class="ic ic-lg">
+            <use href="#i-file"/>
+        </svg>
+
+        <h1>Chi tiết hợp đồng</h1>
+    </div>
+
+    <!-- Thông tin hợp đồng -->
+    <div class="card-box">
+
+        <h2 style="font-size: 18px; margin-bottom: 20px;">
+            Thông tin chi tiết
+        </h2>
+
+        <table style="width: 100%; border-collapse: collapse;">
+
+            <tr>
+                <td style="padding: 12px; font-weight: bold;">
+                    Mã hợp đồng:
+                </td>
+                <td style="padding: 12px;"
+                    th:text="${'#' + hopDong.maHopDong}">
+                    #1
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding: 12px; font-weight: bold;">
+                    Mã sinh viên:
+                </td>
+                <td style="padding: 12px;"
+                    th:text="${hopDong.maSinhVien}">
+                    1
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding: 12px; font-weight: bold;">
+                    Mã phòng:
+                </td>
+                <td style="padding: 12px;"
+                    th:text="${hopDong.maPhong}">
+                    A101
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding: 12px; font-weight: bold;">
+                    Ngày bắt đầu:
+                </td>
+                <td style="padding: 12px;"
+                    th:text="${hopDong.ngayBatDau}">
+                    2025-09-01
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding: 12px; font-weight: bold;">
+                    Ngày kết thúc:
+                </td>
+                <td style="padding: 12px;"
+                    th:text="${hopDong.ngayKetThuc}">
+                    2026-08-31
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding: 12px; font-weight: bold;">
+                    Giá thuê:
+                </td>
+                <td style="padding: 12px; color: #198754; font-weight: bold;"
+                    th:text="${#numbers.formatDecimal(hopDong.giaThue, 0, 'COMMA', 0, 'POINT') + ' đ'}">
+                    3,500,000 đ
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding: 12px; font-weight: bold;">
+                    Trạng thái:
+                </td>
+                <td style="padding: 12px;"
+                    th:text="${hopDong.trangThai}">
+                    Hiệu lực
+                </td>
+            </tr>
+
+        </table>
+
+        <!-- Nút thao tác -->
+        <div style="margin-top: 25px;">
+
+            <a th:href="@{/contract/edit/{id}(id=${hopDong.maHopDong})}"
+               class="btn btn-primary">
+                Sửa hợp đồng
+            </a>
+
+            <a th:href="@{/contract}"
+               class="btn btn-secondary"
+               style="margin-left: 10px;">
+                Quay lại
+            </a>
+
+        </div>
+
+    </div>
+
+</main>
+</body>
+</html>
