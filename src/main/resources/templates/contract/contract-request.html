@@ -5,7 +5,6 @@
   <title>Yêu cầu hợp đồng | Quản lý KTX</title>
 </head>
 <body>
-<!-- ===== Nhi: viết giao diện + xử lý gửi yêu cầu trong thẻ <main> (3 lựa chọn bên dưới là khung gợi ý) ===== -->
 <main>
   <div class="page-title">
     <svg class="ic ic-lg"><use href="#i-clipboard"/></svg>
@@ -13,29 +12,46 @@
   </div>
 
   <div class="card-box">
-    <p>Chọn một trong các yêu cầu dành cho hợp đồng ký túc xá hiện tại của bạn:</p>
-    <div class="shortcut-grid">
-      <div class="shortcut">
-        <span class="shortcut-icon"><svg class="ic ic-lg"><use href="#i-file"/></svg></span>
-        <span>Gia hạn hợp đồng</span>
-        <small>Tiếp tục ở thêm một kỳ</small>
+    <p style="margin-bottom: 16px; color: #495057; font-weight: 500;">Chọn một trong các yêu cầu dành cho hợp đồng ký túc xá hiện tại của bạn:</p>
+    <div class="shortcut-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+      <div class="shortcut" style="padding: 16px; border: 1px solid #dee2e6; border-radius: 8px; text-align: center; cursor: pointer; background: #f8f9fa;">
+        <span class="shortcut-icon" style="display: block; margin-bottom: 8px; color: #0d6efd;"><svg class="ic ic-lg"><use href="#i-file"/></svg></span>
+        <strong style="display: block; font-size: 15px;">Gia hạn hợp đồng</strong>
+        <small style="color: #6c757d;">Tiếp tục ở thêm một kỳ</small>
       </div>
-      <div class="shortcut">
-        <span class="shortcut-icon"><svg class="ic ic-lg"><use href="#i-logout"/></svg></span>
-        <span>Hủy hợp đồng</span>
-        <small>Không thuê nữa, trả phòng</small>
+      <div class="shortcut" style="padding: 16px; border: 1px solid #dee2e6; border-radius: 8px; text-align: center; cursor: pointer; background: #f8f9fa;">
+        <span class="shortcut-icon" style="display: block; margin-bottom: 8px; color: #dc3545;"><svg class="ic ic-lg"><use href="#i-logout"/></svg></span>
+        <strong style="display: block; font-size: 15px;">Hủy hợp đồng</strong>
+        <small style="color: #6c757d;">Không thuê nữa, trả phòng</small>
       </div>
-      <div class="shortcut">
-        <span class="shortcut-icon"><svg class="ic ic-lg"><use href="#i-building"/></svg></span>
-        <span>Chuyển phòng</span>
-        <small>Đổi sang phòng khác</small>
+      <div class="shortcut" style="padding: 16px; border: 1px solid #dee2e6; border-radius: 8px; text-align: center; cursor: pointer; background: #f8f9fa;">
+        <span class="shortcut-icon" style="display: block; margin-bottom: 8px; color: #ffc107;"><svg class="ic ic-lg"><use href="#i-building"/></svg></span>
+        <strong style="display: block; font-size: 15px;">Chuyển phòng</strong>
+        <small style="color: #6c757d;">Đổi sang phòng khác</small>
       </div>
     </div>
   </div>
 
-  <div class="card-box placeholder" style="margin-top:16px">
-    <h2>Khu vực nội dung: Gửi yêu cầu</h2>
-    <p>File này: <code>templates/contract/contract-request.html</code><br>Nhi viết form chọn loại yêu cầu, lý do và nút gửi đè lên phần này.</p>
+  <!-- Form gửi yêu cầu thay thế cho placeholder cũ -->
+  <div class="card-box" style="margin-top: 20px;">
+    <h2 style="font-size: 18px; margin-bottom: 16px; color: #333;">Biểu mẫu gửi yêu cầu</h2>
+    <form>
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: 500;">Loại yêu cầu:</label>
+        <select class="form-control" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 6px;">
+          <option>Gia hạn hợp đồng (Thêm 6 tháng/1 kỳ)</option>
+          <option>Chuyển sang phòng khác</option>
+          <option>Hủy hợp đồng trước hạn</option>
+        </select>
+      </div>
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: 500;">Lý do gửi yêu cầu:</label>
+        <textarea rows="4" placeholder="Nhập lý do chi tiết..." class="form-control" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 6px;"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" style="background-color: #0d6efd; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">
+        Gửi yêu cầu
+      </button>
+    </form>
   </div>
 </main>
 </body>
